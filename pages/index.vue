@@ -12,14 +12,15 @@
   </MainLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import MainLayout from '@/layouts/MainLayout.vue'
 import { useUserStore } from '@/store/user'
+import { PostItem } from '@/interfaces'
 
 const userStore = useUserStore()
 // const user = useSupabaseUser();
 
-const posts = ref([])
+const posts = ref<PostItem[]>([])
 const isPosts = ref(true)
 const isLoading = ref(false)
 
@@ -27,9 +28,9 @@ onBeforeMount(() => {
   posts.value = [
     {
       name: 'John Weeks Developer',
-      image: 'https://placehold.co/100',
+      image: 'https://placehold.co/500',
       text: 'This is the title',
-      picture: 'https://placehold.co/100'
+      picture: 'https://placehold.co/500'
     }
   ]
 })
