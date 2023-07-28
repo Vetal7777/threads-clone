@@ -4,12 +4,12 @@ export default defineNuxtConfig({
     'nuxt-icon',
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
-    '@vite-pwa/nuxt'
-    // '@nuxtjs/supabase'
+    '@vite-pwa/nuxt',
+    '@nuxtjs/supabase'
   ],
   runtimeConfig: {
     public: {
-      bucket: process.env.BUCKET
+      bucket: process.env.BUCKET_URL
     }
   }
 })
