@@ -4,7 +4,7 @@
       <div class="mx-auto max-w-[500px] overflow-hidden">
         <div id="Posts" class="mx-auto max-w-[600px] px-4">
           <div v-if="isPosts" v-for="post in posts" :key="post">
-            <Post :post="post" @isDeleted="posts = userStore.getAllPosts()" />
+            <Post :post="post" @isDeleted="userStore.getAllPosts()" />
           </div>
           <div v-else>
             <client-only>
@@ -43,7 +43,7 @@
   </MainLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import MainLayout from '@/layouts/MainLayout.vue'
 import { storeToRefs } from 'pinia'
 
@@ -61,19 +61,9 @@ watchEffect(() => {
   }
 })
 
-onBeforeMount(async () => {
-  try {
-    isLoading.value = true
-    await userStore.getAllPosts()
-    isLoading.value = false
-  } catch (error) {
-    console.log(error)
-  }
-})
-
 onMounted(() => {
   watchEffect(() => {
-    if (posts.value && posts.value.length >= 1) {
+    if (posts.value && posts.value.length) {
       isPosts.value = true
     }
   })
