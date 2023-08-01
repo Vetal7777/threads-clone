@@ -1,6 +1,9 @@
 <template>
-  <div class="fixed h-full w-[calc(100%+1px)] bg-black">
+  <VitePwaManifest />
+
+  <div class="fixed flex h-full w-[calc(100%+1px)] bg-black">
     <NuxtPage />
+
     <CreatePost
       :class="[
         {
@@ -13,6 +16,7 @@
         }
       ]"
     />
+
     <Modal
       :class="[
         {
@@ -28,8 +32,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { useUserStore } from '@/store/user'
-
+<script setup>
+import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 </script>

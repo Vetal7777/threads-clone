@@ -18,7 +18,6 @@
         >
           <Icon name="mdi:close" size="25" />
         </button>
-
         <div class="text-[16px] font-semibold">New Thread</div>
       </div>
 
@@ -28,35 +27,32 @@
       >
         <div class="w-full py-2">
           <div class="flex items-center">
-            <div class="flex items-center text-white">
+            <div v-if="user" class="flex items-center text-white">
               <img
                 class="h-[35px] rounded-full"
-                src="https://picsum.photos/id/223/50"
+                :src="user.identities[0].identity_data.avatar_url"
               />
-
-              <div class="ml-2 text-[18px] font-semibold">John Weeks Dev</div>
+              <div class="ml-2 text-[18px] font-semibold">
+                {{ user.identities[0].identity_data.full_name }}
+              </div>
             </div>
           </div>
-
           <div class="relative flex w-full items-center">
             <div class="mx-auto w-[42px]">
               <div
                 class="absolute top-0 ml-4 mt-1 h-full w-[1px] bg-gray-700"
-              ></div>
+              />
             </div>
-
-            <div
-              class="text w-[calc(100%-50px)] w-full rounded-lg bg-black font-light"
-            >
+            <div class="text w-full rounded-lg bg-black font-light">
               <div class="w-full bg-black pt-2 text-gray-300">
                 <textarea
                   v-model="text"
                   style="resize: none"
-                  placeholder="Start a thdread..."
+                  placeholder="Start a thread..."
                   id="textarea"
-                  @input="adjustTextareaHeight"
+                  @input="adjustTextareaHeight()"
                   class="w-full bg-black outline-none"
-                />
+                ></textarea>
               </div>
 
               <div class="w-full">
@@ -74,7 +70,6 @@
                       color="#ffffff"
                       size="25"
                     />
-
                     <input
                       ref="file"
                       type="file"
@@ -90,17 +85,17 @@
           </div>
         </div>
       </div>
-
+      <div v-if="fileDisplay" class="mt-16"></div>
       <button
         v-if="text"
         :disabled="isLoading"
-        class="fixed bottom-0 float-right inline-block w-full border-t border-t-gray-700 bg-black p-2 p-4 text-lg"
+        @click="createPost"
+        class="fixed bottom-0 float-right inline-block w-full border-t border-t-gray-700 bg-black p-4 text-lg font-bold"
         :class="isLoading ? 'text-gray-600' : 'text-blue-600'"
       >
         <div v-if="!isLoading">Post</div>
-
         <div v-else class="flex items-center justify-center gap-2">
-          <Icon size="25" name="eos-icons:bubble-loading" />
+          <Icon name="eos-icons:bubble-loading" size="25" />
           Please wait...
         </div>
       </button>
@@ -108,27 +103,26 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { useUserStore } from '@/store/user'
-import { PostItem } from '@/interfaces'
-import { fileURLToPath } from 'url'
-
+<script setup>
+import { useUserStore } from '@/stores/user'
+import { v4 as uuidv4 } from 'uuid'
 const userStore = useUserStore()
 
-// const client = useSupabaseClient();
-// const user = useSupabaseUser();
+const client = useSupabaseClient()
+const user = useSupabaseUser()
 
-const text = ref(null)
-const isLoading = ref(false)
-const file = ref(null)
-const fileDisplay = ref(null)
-const fileData = ref(null)
+let text = ref(null)
+let isLoading = ref(false)
 
-const adjustTextareaHeight = (): void => {
-  const textarea = document.getElementById('textarea') as HTMLTextAreaElement
+const adjustTextareaHeight = () => {
+  var textarea = document.getElementById('textarea')
   textarea.style.height = 'auto'
-  textarea.style.height = `${textarea.scrollHeight}px`
+  textarea.style.height = textarea.scrollHeight + 'px'
 }
+
+let file = ref(null)
+let fileDisplay = ref(null)
+let fileData = ref(null)
 
 const clearData = () => {
   text.value = null
@@ -140,5 +134,53 @@ const clearData = () => {
 const onChange = () => {
   fileDisplay.value = URL.createObjectURL(file.value.files[0])
   fileData.value = file.value.files[0]
+}
+
+const createPost = async () => {
+  let dataOut = null
+  let errorOut = null
+
+  isLoading.value = true
+
+  if (fileData.value) {
+    const { data, error } = await client.storage
+      .from('threads-clone-files')
+      .upload(`${uuidv4()}.jpg`, fileData.value)
+
+    dataOut = data
+    errorOut = error
+  }
+
+  if (errorOut) {
+    console.log(errorOut)
+    return errorOut
+  }
+
+  let pic = ''
+  if (dataOut) {
+    pic = dataOut.path ? dataOut.path : ''
+  }
+
+  try {
+    await useFetch(`/api/create-post/`, {
+      method: 'POST',
+      body: {
+        userId: user.value.identities[0].user_id,
+        name: user.value.identities[0].identity_data.full_name,
+        image: user.value.identities[0].identity_data.avatar_url,
+        text: text.value,
+        picture: pic
+      }
+    })
+
+    await userStore.getAllPosts()
+    userStore.isMenuOverlay = false
+
+    clearData()
+    isLoading.value = false
+  } catch (error) {
+    console.log(error)
+    isLoading.value = false
+  }
 }
 </script>

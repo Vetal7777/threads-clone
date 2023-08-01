@@ -1724,6 +1724,18 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
+"@prisma/client@^5.0.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-5.1.0.tgz#6c378a2b7ecdeab6b3f24179484980257beac25d"
+  integrity sha512-aIxuXlH3p3Vy91buodQhYgAD9m0yuxJzpXMhc1ejQ/WN3pNNWzBA0iDcBObLq8DMdszcXmoLAk3hiRq/ZwBsOw==
+  dependencies:
+    "@prisma/engines-version" "5.1.0-28.a9b7003df90aa623086e4d6f4e43c72468e6339b"
+
+"@prisma/engines-version@5.1.0-28.a9b7003df90aa623086e4d6f4e43c72468e6339b":
+  version "5.1.0-28.a9b7003df90aa623086e4d6f4e43c72468e6339b"
+  resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-5.1.0-28.a9b7003df90aa623086e4d6f4e43c72468e6339b.tgz#0a6400d709a64cc43b076f0567715f459fadd5bc"
+  integrity sha512-jTwE2oy1yjICmTfnCR0ASIpuMZXZ18sUzQXB7V0RMbrM9OlcmbUwXPuYhnxXuWN8XwRmujeIhsXs/Zeh+fjPOQ==
+
 "@prisma/engines@5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-5.0.0.tgz#5249650eabe77c458c90f2be97d8210353c2e22e"
@@ -6479,6 +6491,14 @@ pinia@>=2.1.0:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/pinia/-/pinia-2.1.4.tgz#a642adfe6208e10c36d3dc16184a91064788142a"
   integrity sha512-vYlnDu+Y/FXxv1ABo1vhjC+IbqvzUdiUC3sfDRrRyY2CQSrqqaa+iiHmqtARFxJVqWQMCJfXx1PBvFs9aJVLXQ==
+  dependencies:
+    "@vue/devtools-api" "^6.5.0"
+    vue-demi ">=0.14.5"
+
+pinia@^2.1.4:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/pinia/-/pinia-2.1.6.tgz#e88959f14b61c4debd9c42d0c9944e2875cbe0fa"
+  integrity sha512-bIU6QuE5qZviMmct5XwCesXelb5VavdOWKWaB17ggk++NUwQWWbP5YnsONTk3b752QkW9sACiR81rorpeOMSvQ==
   dependencies:
     "@vue/devtools-api" "^6.5.0"
     vue-demi ">=0.14.5"

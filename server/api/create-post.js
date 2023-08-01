@@ -4,7 +4,9 @@ const prisma = new PrismaClient()
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  const response = await prisma.posts.create({
+  console.log(body)
+
+  const res = await prisma.posts.create({
     data: {
       userId: body.userId,
       name: body.name,
@@ -14,5 +16,5 @@ export default defineEventHandler(async (event) => {
     }
   })
 
-  return response
+  return res
 })
