@@ -152,7 +152,6 @@ const createPost = async () => {
   }
 
   if (errorOut) {
-    console.log(errorOut)
     return errorOut
   }
 

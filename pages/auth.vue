@@ -27,20 +27,23 @@
 </template>
 
 <script setup>
-const client = useSupabaseClient()
+import { ROUTES } from '@/routes'
+
+const { auth } = useSupabaseClient()
 const user = useSupabaseUser()
+const redirectTo = `${useRuntimeConfig().public.baseUrl}/`
 
 watchEffect(() => {
   if (user.value) {
-    return navigateTo('/')
+    return navigateTo(ROUTES.home)
   }
 })
 
 const login = async (prov) => {
-  const { error } = await client.auth.signInWithOAuth({
+  await auth.signInWithOAuth({
     provider: prov,
     options: {
-      redirectTo: window.location.origin
+      redirectTo
     }
   })
   if (error) console.log(error)

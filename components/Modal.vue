@@ -26,13 +26,14 @@
 </template>
 
 <script setup>
+import { ROUTES } from '@/routes'
 import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
-const client = useSupabaseClient()
+const { auth } = useSupabaseClient()
 
 const logout = () => {
-  client.auth.signOut()
+  auth.signOut()
   userStore.isLogoutOverlay = false
-  return navigateTo('/')
+  navigateTo(ROUTES.auth)
 }
 </script>
