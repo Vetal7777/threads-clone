@@ -47,6 +47,7 @@
 import MainLayout from '@/layouts/MainLayout.vue'
 import { storeToRefs } from 'pinia'
 
+import { ROUTES } from '@/routes'
 import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 const { posts } = storeToRefs(userStore)
@@ -55,9 +56,11 @@ const user = useSupabaseUser()
 let isPosts = ref(false)
 let isLoading = ref(false)
 
-watchEffect(() => {
+watchEffect(async () => {
   if (!user.value) {
-    return navigateTo('/auth')
+    return navigateTo(ROUTES.login)
+  } else {
+    await userStore.getAllPosts()
   }
 })
 

@@ -34,6 +34,6 @@ const { auth } = useSupabaseClient()
 const logout = () => {
   auth.signOut()
   userStore.isLogoutOverlay = false
-  navigateTo(ROUTES.auth)
+  navigateTo(ROUTES.login)
 }
 </script>

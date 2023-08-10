@@ -20,7 +20,7 @@
       <div
         class="mx-auto flex w-full max-w-[500px] items-center justify-around"
       >
-        <button @click="navigateTo('/')" class="h-full w-full">
+        <button @click="navigateTo(ROUTES.home)" class="h-full w-full">
           <Icon
             name="material-symbols:home-outline"
             size="35"
@@ -44,6 +44,7 @@
 </template>
 
 <script setup>
+import { ROUTES } from '@/routes'
 import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 </script>
