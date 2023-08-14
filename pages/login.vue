@@ -39,12 +39,9 @@ watchEffect(() => {
   }
 })
 
-const login = async (prov) => {
+const login = async (provider) => {
   await auth.signInWithOAuth({
-    provider: prov,
-    options: {
-      redirectTo
-    }
+    provider
   })
   if (error) console.log(error)
 }
