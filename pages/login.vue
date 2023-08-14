@@ -31,7 +31,6 @@ import { ROUTES } from '@/routes'
 
 const { auth } = useSupabaseClient()
 const user = useSupabaseUser()
-const redirectTo = `${useRuntimeConfig().public.baseUrl}/`
 
 watchEffect(() => {
   if (user.value) {
