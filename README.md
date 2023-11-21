@@ -1,63 +1,22 @@
-# Nuxt 3 Minimal Starter
+# Threads Clone (META) PWA
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This is a modern Progressive Web App (PWA) inspired by Threads, developed using Nuxt 3, Vue.js, SupaBase, Tailwind CSS, Prisma, and Pinia. This application aims to provide a seamless and responsive user experience for threaded discussions.
 
-## Setup
+## Features
 
-Make sure to install the dependencies:
+- **Threaded Discussions:** Engage in organized and threaded discussions, allowing users to easily follow conversations.
+- **Progressive Web App:** Enjoy a responsive and app-like experience, accessible on various devices and platforms.
+- **SupaBase Integration:** Leverage SupaBase for backend services, including real-time data synchronization and authentication.
+- **Nuxt 3 and Vue.js:** Utilize the power of Nuxt 3 and Vue.js for efficient and performant frontend development.
+- **Tailwind CSS:** Design a clean and visually appealing interface using Tailwind CSS for styling.
+- **Prisma:** Seamlessly interact with the database using Prisma for efficient and type-safe database queries.
+- **Pinia:** Manage state in a scalable and maintainable way with Pinia, the state management solution for Vue.js.
 
-```bash
-# npm
-npm install
+## Technologies Used
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- [Nuxt 3](https://nuxtjs.org)
+- [Vue.js](https://vuejs.org)
+- [SupaBase](https://supabase.io)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Prisma](https://www.prisma.io)
+- [Pinia](https://pinia.esm.dev)
