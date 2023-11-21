@@ -2,6 +2,8 @@
 
 This is a modern Progressive Web App (PWA) inspired by Threads, developed using Nuxt 3, Vue.js, SupaBase, Tailwind CSS, Prisma, and Pinia. This application aims to provide a seamless and responsive user experience for threaded discussions.
 
+<img src="https://res.cloudinary.com/dgyor8x0z/image/upload/v1700603547/threads-slide.png">
+
 ## Features
 
 - **Threaded Discussions:** Engage in organized and threaded discussions, allowing users to easily follow conversations.
