@@ -7,13 +7,7 @@
       <div
         class="flex items-center justify-start py-4 max-w-[500px] mx-auto border-b border-b-gray-700"
       >
-        <button
-          @click="
-            userStore.isMenuOverlay = false
-            clearData()
-          "
-          class="rounded-full px-2"
-        >
+        <button @click="onClear" class="rounded-full px-2">
           <Icon name="mdi:close" size="25" />
         </button>
         <div class="text-[16px] font-semibold">New Thread</div>
@@ -50,7 +44,7 @@
                   style="resize: none"
                   placeholder="Start a thread..."
                   id="textarea"
-                  @input="adjustTextareaHeight()"
+                  @input="adjustTextareaHeight"
                   class="w-full bg-black outline-none"
                 ></textarea>
               </div>
@@ -104,12 +98,14 @@
 </template>
 
 <script setup>
+import { storeToRefs } from 'pinia'
 import { v4 as uuidv4 } from 'uuid'
 import { useUserStore } from '~/stores/user'
 
 const userStore = useUserStore()
 const client = useSupabaseClient()
 const user = useSupabaseUser()
+const { isMenuOverlay } = storeToRefs(userStore)
 
 let text = ref(null)
 let isLoading = ref(false)
@@ -133,6 +129,11 @@ const clearData = () => {
 const onChange = () => {
   fileDisplay.value = URL.createObjectURL(file.value.files[0])
   fileData.value = file.value.files[0]
+}
+
+const onClear = () => {
+  isMenuOverlay = false
+  clearData()
 }
 
 const createPost = async () => {
@@ -172,7 +173,7 @@ const createPost = async () => {
     await userStore.createPost(post)
     await userStore.getAllPosts()
 
-    userStore.isMenuOverlay = false
+    isMenuOverlay = false
 
     clearData()
     isLoading.value = false

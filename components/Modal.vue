@@ -15,7 +15,7 @@
       </button>
       <div class="border-b border-b-gray-700 my-1" />
       <button
-        @click="logout()"
+        @click="logout"
         class="flex items-center justify-between bg-black w-full p-3"
       >
         <div>Log Out</div>

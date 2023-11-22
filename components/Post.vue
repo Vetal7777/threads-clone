@@ -6,13 +6,7 @@
           <img class="rounded-full h-[35px]" :src="post.image" />
           <div class="ml-2 font-semibold text-[18px]">{{ post.name }}</div>
         </div>
-        <div
-          v-if="
-            user && user.identities && user.identities[0].user_id == post.userId
-          "
-          @click="isMenu = !isMenu"
-          class="relative"
-        >
+        <div v-if="showPost" @click="isMenu = !isMenu" class="relative">
           <button
             :disabled="isDeleting"
             class="flex items-center text-white p-1 h-[24px] w-[24px] hover:bg-gray-800 rounded-full cursor-pointer"
@@ -64,7 +58,7 @@
           <div class="absolute mt-2 w-full ml-2">
             <button
               :disabled="isLike"
-              @click="likesFunc()"
+              @click="likesFunc"
               class="flex items-center gap-1"
             >
               <Icon
@@ -154,6 +148,12 @@ const hasLikedComputed = computed(() => {
   })
 
   return res
+})
+
+const showPost = computed(() => {
+  return (
+    user && user.identities && user.identities[0].user_id == props.post.userId
+  )
 })
 
 const deletePost = async (id, picture) => {
