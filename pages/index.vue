@@ -43,7 +43,7 @@
   </MainLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ROUTES } from '@/routes'
 import { storeToRefs } from 'pinia'
 import MainLayout from '~/layouts/MainLayout.vue'

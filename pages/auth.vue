@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ROUTES } from '~/routes'
 
 const client = useSupabaseClient()

@@ -22,10 +22,10 @@
             <div v-if="user" class="flex items-center text-white">
               <img
                 class="rounded-full h-[35px]"
-                :src="user.identities[0].identity_data.avatar_url"
+                :src="user.identities![0].identity_data?.avatar_url"
               />
               <div class="ml-2 font-semibold text-[18px]">
-                {{ user.identities[0].identity_data.full_name }}
+                {{ user.identities![0].identity_data?.full_name }}
               </div>
             </div>
           </div>
@@ -97,8 +97,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { FileElement } from '@/types'
 import { storeToRefs } from 'pinia'
+// @ts-ignore
+
 import { v4 as uuidv4 } from 'uuid'
 import { useUserStore } from '~/stores/user'
 
@@ -107,32 +110,37 @@ const client = useSupabaseClient()
 const user = useSupabaseUser()
 const { isMenuOverlay } = storeToRefs(userStore)
 
-let text = ref(null)
+let text = ref<string>('')
 let isLoading = ref(false)
-let file = ref(null)
-let fileDisplay = ref(null)
-let fileData = ref(null)
+let file = ref<null | FileElement>(null)
+let fileDisplay = ref<string | null>(null)
+let fileData = ref<Blob | null>(null)
 
 const adjustTextareaHeight = () => {
   var textarea = document.getElementById('textarea')
-  textarea.style.height = 'auto'
-  textarea.style.height = textarea.scrollHeight + 'px'
+
+  if (textarea) {
+    textarea.style.height = 'auto'
+    textarea.style.height = textarea.scrollHeight + 'px'
+  }
 }
 
 const clearData = () => {
-  text.value = null
+  text.value = ''
   file.value = null
   fileDisplay.value = null
   fileData.value = null
 }
 
 const onChange = () => {
-  fileDisplay.value = URL.createObjectURL(file.value.files[0])
-  fileData.value = file.value.files[0]
+  if (file.value) {
+    fileDisplay.value = URL.createObjectURL(file.value.files[0])
+    fileData.value = file.value.files[0]
+  }
 }
 
 const onClear = () => {
-  isMenuOverlay = false
+  isMenuOverlay.value = false
   clearData()
 }
 
@@ -161,22 +169,28 @@ const createPost = async () => {
     picture = dataOut.path ? dataOut.path : ''
   }
 
-  const post = {
-    userId: user.value.identities[0].user_id,
-    name: user.value.identities[0].identity_data.full_name,
-    image: user.value.identities[0].identity_data.avatar_url,
-    text: text.value,
-    picture
-  }
-
   try {
-    await userStore.createPost(post)
-    await userStore.getAllPosts()
+    if (
+      user.value &&
+      user.value.identities &&
+      user.value.identities[0].identity_data
+    ) {
+      const post = {
+        userId: user.value.identities[0].user_id,
+        name: user.value.identities[0].identity_data.full_name,
+        image: user.value.identities[0].identity_data.avatar_url,
+        text: text.value,
+        picture
+      }
 
-    isMenuOverlay = false
+      await userStore.createPost(post)
+      await userStore.getAllPosts()
 
-    clearData()
-    isLoading.value = false
+      isMenuOverlay.value = false
+
+      clearData()
+      isLoading.value = false
+    }
   } catch (error) {
     console.log(error)
     isLoading.value = false

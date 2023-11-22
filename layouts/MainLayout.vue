@@ -43,7 +43,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { ROUTES } from '~/routes'
 import { useUserStore } from '~/stores/user'
