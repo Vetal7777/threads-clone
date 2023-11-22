@@ -2,19 +2,19 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
-    const body = await readBody(event)
+  const { userId, name, image, text, picture } = await readBody(event)
 
-    console.log(body)
-    
-    const res = await prisma.posts.create({
-        data: {
-            userId: body.userId,
-            name: body.name,
-            image: body.image,
-            text: body.text,
-            picture: body.picture,
-        }
-    })
+  console.log(body)
 
-    return res
+  const res = await prisma.posts.create({
+    data: {
+      userId,
+      name,
+      image,
+      text,
+      picture
+    }
+  })
+
+  return res
 })
