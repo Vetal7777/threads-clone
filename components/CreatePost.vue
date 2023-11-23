@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="user && user.identities"
     id="CreatePost"
     class="fixed z-50 bottom-0 h-full w-full overflow-hidden"
   >
@@ -22,10 +23,10 @@
             <div v-if="user" class="flex items-center text-white">
               <img
                 class="rounded-full h-[35px]"
-                :src="user.identities![0].identity_data?.avatar_url"
+                :src="user.identities[0].identity_data?.avatar_url"
               />
               <div class="ml-2 font-semibold text-[18px]">
-                {{ user.identities![0].identity_data?.full_name }}
+                {{ user.identities[0].identity_data?.full_name }}
               </div>
             </div>
           </div>
@@ -98,10 +99,9 @@
 </template>
 
 <script setup lang="ts">
-import { FileElement } from '@/types'
+import { type FileElement } from '@/types'
 import { storeToRefs } from 'pinia'
 // @ts-ignore
-
 import { v4 as uuidv4 } from 'uuid'
 import { useUserStore } from '~/stores/user'
 
@@ -175,7 +175,7 @@ const createPost = async () => {
       user.value.identities &&
       user.value.identities[0].identity_data
     ) {
-      const post = {
+      const body = {
         userId: user.value.identities[0].user_id,
         name: user.value.identities[0].identity_data.full_name,
         image: user.value.identities[0].identity_data.avatar_url,
@@ -183,7 +183,7 @@ const createPost = async () => {
         picture
       }
 
-      await userStore.createPost(post)
+      await userStore.createPost(body)
       await userStore.getAllPosts()
 
       isMenuOverlay.value = false
