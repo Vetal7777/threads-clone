@@ -1,5 +1,5 @@
 <template>
-  <div class="z-50 bottom-0 h-full w-full">
+  <div v-if="post" class="z-50 bottom-0 h-full w-full">
     <div class="py-2 w-full">
       <div class="flex items-center justify-between">
         <div class="flex items-center text-white">
@@ -31,7 +31,7 @@
             class="absolute border border-gray-600 right-0 z-20 mt-1 rounded"
           >
             <button
-              @click="deletePost(post.id, post.picture)"
+              @click="deletePost(String(post.id), post.picture)"
               class="flex items-center rounded gap-2 text-red-500 justify-between bg-black w-full pl-4 pr-3 py-1 hover:bg-gray-900"
             >
               <div>Delete</div>
@@ -121,8 +121,17 @@
 
 <script setup lang="ts">
 import { useUserStore } from '~/stores/user'
+import type {
+  DeletePostFunc,
+  LikePostFunc,
+  Post,
+  PostLike,
+  UnlikePostFunc
+} from '~/types'
 
-const props = defineProps({ post: Object })
+const props = defineProps({
+  post: { type: Object as PropType<Post>, required: true }
+})
 
 const userStore = useUserStore()
 const client = useSupabaseClient()
@@ -136,27 +145,32 @@ let isLike = ref(false)
 let isDeleting = ref(false)
 
 const hasLikedComputed = computed(() => {
-  if (!user.value) return
-  let res = false
-  props.post.likes.forEach((like) => {
-    if (
-      like.userId == user.value.identities[0].user_id &&
-      like.postId == props.post.id
-    ) {
-      res = true
-    }
-  })
+  if (!user.value) {
+    let res = false
+    props.post.likes.forEach((like) => {
+      if (
+        user.value &&
+        user.value.identities &&
+        like.userId == user.value.identities[0].user_id &&
+        like.postId == props.post.id
+      ) {
+        res = true
+      }
+    })
 
-  return res
+    return res
+  }
 })
 
 const showPost = computed(() => {
   return (
-    user && user.identities && user.identities[0].user_id == props.post.userId
+    user.value &&
+    user.value.identities &&
+    user.value.identities[0].user_id == props.post.userId
   )
 })
 
-const deletePost = async (id, picture) => {
+const deletePost: DeletePostFunc = async (id, picture) => {
   let res = confirm('Are you sure you want to delete this post?')
 
   if (!res) return
@@ -166,7 +180,7 @@ const deletePost = async (id, picture) => {
     isDeleting.value = true
 
     await client.storage.from('threads-c-files').remove([picture])
-    await userStore.deletePost(id)
+    await userStore.deletePost({ id })
 
     emit('isDeleted', true)
 
@@ -177,13 +191,11 @@ const deletePost = async (id, picture) => {
   }
 }
 
-const likePost = async (postId) => {
-  const userId = user.value.identities[0].user_id
-
+const likePost: LikePostFunc = async (postId) => {
   isLike.value = true
 
   try {
-    await userStore.likePost({ userId, postId })
+    await userStore.likePost({ id: postId })
     await userStore.getAllPosts()
     isLike.value = false
   } catch (error) {
@@ -192,10 +204,10 @@ const likePost = async (postId) => {
   }
 }
 
-const unlikePost = async (id) => {
+const unlikePost: UnlikePostFunc = async (id) => {
   isLike.value = true
   try {
-    await userStore.deletePost(id)
+    await userStore.deletePost({ id })
     await userStore.getAllPosts()
     isLike.value = false
   } catch (error) {
@@ -205,14 +217,16 @@ const unlikePost = async (id) => {
 }
 
 const likesFunc = () => {
-  let likePostObj = null
+  let likePostObj: PostLike | null = null
 
   if (props.post.likes.length < 1) {
-    likePost(props.post.id)
+    likePost(String(props.post.id))
     return null
   } else {
     props.post.likes.forEach((like) => {
       if (
+        user.value &&
+        user.value.identities &&
         like.userId == user.value.identities[0].user_id &&
         like.postId == props.post.id
       ) {
@@ -222,10 +236,10 @@ const likesFunc = () => {
   }
 
   if (likePostObj) {
-    unlikePost(likePostObj.id)
+    unlikePost(String(likePostObj.postId))
     return null
   }
 
-  likePost(props.post.id)
+  likePost(String(props.post.id))
 }
 </script>
