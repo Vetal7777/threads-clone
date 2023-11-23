@@ -28,15 +28,16 @@
 
 <script setup lang="ts">
 import { ROUTES } from '~/routes'
+import type { LoginFunc } from '~/types'
 
 const client = useSupabaseClient()
 const user = useSupabaseUser()
 
-const login = async (provider) => {
-  const { error } = await client.auth.signInWithOAuth({
-    provider,
-    redirectTo: window.location.origin
-  })
+const login: LoginFunc = async (provider) => {
+  const redirectTo = window.location.origin
+  const credentials = { provider, redirectTo }
+
+  const { error } = await client.auth.signInWithOAuth(credentials)
 
   if (error) console.log(error)
 }
