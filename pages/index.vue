@@ -3,8 +3,8 @@
     <div id="IndexPage" class="w-full overflow-auto">
       <div class="mx-auto max-w-[500px] overflow-hidden">
         <div id="Posts" class="px-4 max-w-[600px] mx-auto">
-          <div v-if="isPosts" v-for="post in posts" :key="post">
-            <Post :post="post" @isDeleted="posts = userStore.getAllPosts()" />
+          <div v-if="isPosts" v-for="post in posts" :key="post.userId">
+            <Post :post="post" @isDeleted="onDelete" />
           </div>
           <div v-else>
             <client-only>
@@ -48,14 +48,19 @@ import { ROUTES } from '@/routes'
 import { storeToRefs } from 'pinia'
 import MainLayout from '~/layouts/MainLayout.vue'
 import { useUserStore } from '~/stores/user'
+import type { Post } from '~/types'
 
 const userStore = useUserStore()
 const user = useSupabaseUser()
 const { posts: storePosts } = storeToRefs(userStore)
 
-let posts = ref([])
+let posts = ref<Post[]>([])
 let isPosts = ref(false)
 let isLoading = ref(false)
+
+const onDelete = async () => {
+  posts.value = await userStore.getAllPosts()
+}
 
 watchEffect(() => {
   if (!user.value) {
@@ -75,8 +80,8 @@ onBeforeMount(async () => {
 
 onMounted(() => {
   watchEffect(() => {
-    if (storePosts && storePosts.length) {
-      posts.value = storePosts
+    if (storePosts.value && storePosts.value.length) {
+      posts.value = storePosts.value
       isPosts.value = true
     }
   })
@@ -85,8 +90,8 @@ onMounted(() => {
 watch(
   () => posts.value,
   () => {
-    if (storePosts && storePosts.length) {
-      posts.value = storePosts
+    if (storePosts.value && storePosts.value.length) {
+      posts.value = storePosts.value
       isPosts.value = true
     }
   },
