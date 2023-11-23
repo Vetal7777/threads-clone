@@ -36,7 +36,7 @@ const { isLogoutOverlay } = storeToRefs(userStore)
 
 const logout = () => {
   client.auth.signOut()
-  isLogoutOverlay = false
-  return navigateTo(ROUTES.home)
+  isLogoutOverlay.value = false
+  navigateTo(ROUTES.home)
 }
 </script>
