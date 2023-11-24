@@ -125,7 +125,6 @@ import type {
   DeletePostFunc,
   LikePostFunc,
   Post,
-  PostLike,
   UnlikePostFunc
 } from '~/types'
 
@@ -217,27 +216,16 @@ const unlikePost: UnlikePostFunc = async (id) => {
 }
 
 const likesFunc = () => {
-  let likePostObj: PostLike | null = null
-
-  if (props.post.likes.length < 1) {
+  if (!props.post.likes.length) {
     likePost(String(props.post.id))
+
     return null
   } else {
     props.post.likes.forEach((like) => {
-      if (
-        user.value &&
-        user.value.identities &&
-        like.userId == user.value.identities[0].user_id &&
-        like.postId == props.post.id
-      ) {
-        likePostObj = like
+      if (user.value && user.value.identities) {
+        unlikePost(String(like.postId))
       }
     })
-  }
-
-  if (likePostObj) {
-    unlikePost(String(likePostObj.postId))
-    return null
   }
 
   likePost(String(props.post.id))
